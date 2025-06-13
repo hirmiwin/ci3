@@ -72,7 +72,7 @@
         }
 
         body {
-            background-image: url('<?php echo base_url() ?>aset/dist/img/raporback.png');
+            /* background-image: url('<?php echo base_url() ?>aset/dist/img/raporback.png'); */
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-position: center;
@@ -513,7 +513,7 @@
         </tbody>
     </table>
 
-    <p style=" text-align: center; margin-top: 30px;">Jakarta, June 17<sup>th</sup>, 2025</p>
+    <p style=" text-align: center; margin-top: 30px;">Jakarta, June 14<sup>th</sup>, 2025</p>
 
     <table style="width: 100%; margin-top: 20px; border: none;">
         <tr style="text-align: center;">
