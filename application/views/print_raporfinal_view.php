@@ -198,50 +198,44 @@
                 <!-- English -->
                 <td>2</td>
                 <td style="text-align: left;"><?php echo isset($pelajaran[1]['nama_pelajaran']) ? $pelajaran[1]['nama_pelajaran'] : 'N/A'; ?></td>
-                <td><?php
-                    $pt_score = $mt_score = $hw_score = $ex_score = $ft_score = 0;
-                    
-                    // Get PT and MT scores
-                    foreach ($nilai_mid['mid'] as $nilaimid) {
-                        if ($nilaimid['pelajaran_id'] == 4) {
-                            $pt_score = $nilaimid['nilai_pt'];
-                            $mt_score = $nilaimid['nilai_mt'];
-                            break;
-                        }
-                    }
-                    
-                    // Get HW, EX and FT scores
-                    $hw_total = $hw_count = $ex_total = $ex_count = 0;
-                    foreach ($nilai_mid['final'] as $nilaifinal) {
-                        if ($nilaifinal['pelajaran_id'] == 4) {
-                            if ($nilaifinal['jenisnilai'] == 'hw') {
-                                $hw_total += $nilaifinal['nilai'];
-                                $hw_count++;
-                            }
-                            if ($nilaifinal['jenisnilai'] == 'ex') {
-                                $ex_total += $nilaifinal['nilai'];
-                                $ex_count++;
-                            }
-                            if ($nilaifinal['jenisnilai'] == 'ft') $ft_score = $nilaifinal['nilai'];
-                        }
-                    }
-                    
-                    $hw_score = $hw_count > 0 ? $hw_total / $hw_count : 0;
-                    $ex_score = $ex_count > 0 ? $ex_total / $ex_count : 0;
-                    $ft_with_bonus = min($ft_score + ($ft_score * 0.07), 100);
-                    
-                    $final_score = ($pt_score * 0.10) + ($mt_score * 0.15) + 
-                                 ($hw_score * 0.20) + ($ex_score * 0.25) + 
-                                 ($ft_with_bonus * 0.30);
-                    
-                    echo number_format($final_score, 2);
-                    ?></td>
-                <td><?php
-                    // English class average
-                    $ratakelas_english = $raporfinal_model->get_rata_kelas_detail($siswa['kelas_id'], 4); 
-                    $average = ($ratakelas_english['nilai_pt'] + $ratakelas_english['nilai_mt'] + $ratakelas_english['nilai_hw'] + $ratakelas_english['nilai_ex'] + $ratakelas_english['nilai_ft']) / 5;
-                    echo number_format($average, 2);
-                ?></td>
+                <td>
+    <?php
+    // Ambil nilai English dari tabel nilaifinalmanual
+    $nilai_manual_english = 0;
+    if (isset($siswa['id'])) {
+        // Query manual value if not already passed from controller
+        if (isset($nilai_manual_english_row)) {
+            $nilai_manual_english = $nilai_manual_english_row;
+        } else if (isset($nilai_manual) && isset($nilai_manual[$siswa['id']])) {
+            $nilai_manual_english = $nilai_manual[$siswa['id']]['nilai'];
+        } else {
+            // Fallback: query langsung jika variabel belum ada
+            $ci =& get_instance();
+            $ci->load->database();
+            $row = $ci->db->get_where('nilaifinalmanual', ['siswa_id' => $siswa['id']])->row_array();
+            $nilai_manual_english = $row ? $row['nilai'] : 0;
+        }
+    }
+    echo number_format($nilai_manual_english, 2);
+    ?>
+</td>
+<td>
+    <?php
+    // English class average dari nilaifinalmanual
+    $avg_manual_english = 0;
+    if (isset($siswa['kelas_id'])) {
+        $ci =& get_instance();
+        $ci->load->database();
+        $ci->db->select_avg('nilai');
+        $ci->db->from('nilaifinalmanual');
+        $ci->db->join('siswa', 'siswa.id = nilaifinalmanual.siswa_id');
+        $ci->db->where('siswa.kelas_id', $siswa['kelas_id']);
+        $avg_row = $ci->db->get()->row_array();
+        $avg_manual_english = $avg_row && isset($avg_row['nilai']) ? $avg_row['nilai'] : 0;
+    }
+    echo number_format($avg_manual_english, 2);
+    ?>
+</td>
             </tr>
             <tr>
                 <!-- Science -->
@@ -448,41 +442,48 @@
                     $total_score = 0;
                     foreach ($pelajaran as $index => $subject) {
                         $subject_id = $subject['id'];
-                        $pt_score = $mt_score = $hw_score = $ex_score = $ft_score = 0;
-
-                        // Get PT and MT scores
-                        foreach ($nilai_mid['mid'] as $nilaimid) {
-                            if ($nilaimid['pelajaran_id'] == $subject_id) {
-                                $pt_score = $nilaimid['nilai_pt'];
-                                $mt_score = $nilaimid['nilai_mt'];
-                                break;
+                        // Jika English (misal id=4), ambil dari nilaifinalmanual
+                        if ($subject_id == 4) {
+                            $nilai_manual_english = 0;
+                            if (isset($nilai_manual) && isset($nilai_manual[$siswa['id']])) {
+                                $nilai_manual_english = $nilai_manual[$siswa['id']]['nilai'];
+                            } else {
+                                $ci =& get_instance();
+                                $ci->load->database();
+                                $row = $ci->db->get_where('nilaifinalmanual', ['siswa_id' => $siswa['id']])->row_array();
+                                $nilai_manual_english = $row ? $row['nilai'] : 0;
                             }
-                        }
-
-                        // Get HW, EX and FT scores
-                        $hw_total = $hw_count = $ex_total = $ex_count = 0;
-                        foreach ($nilai_mid['final'] as $nilaifinal) {
-                            if ($nilaifinal['pelajaran_id'] == $subject_id) {
-                                if ($nilaifinal['jenisnilai'] == 'hw') {
-                                    $hw_total += $nilaifinal['nilai'];
-                                    $hw_count++;
+                            $final_score = $nilai_manual_english;
+                        } else {
+                            $pt_score = $mt_score = $hw_score = $ex_score = $ft_score = 0;
+                            foreach ($nilai_mid['mid'] as $nilaimid) {
+                                if ($nilaimid['pelajaran_id'] == $subject_id) {
+                                    $pt_score = $nilaimid['nilai_pt'];
+                                    $mt_score = $nilaimid['nilai_mt'];
+                                    break;
                                 }
-                                if ($nilaifinal['jenisnilai'] == 'ex') {
-                                    $ex_total += $nilaifinal['nilai'];
-                                    $ex_count++;
-                                }
-                                if ($nilaifinal['jenisnilai'] == 'ft') $ft_score = $nilaifinal['nilai'];
                             }
+                            $hw_total = $hw_count = $ex_total = $ex_count = 0;
+                            foreach ($nilai_mid['final'] as $nilaifinal) {
+                                if ($nilaifinal['pelajaran_id'] == $subject_id) {
+                                    if ($nilaifinal['jenisnilai'] == 'hw') {
+                                        $hw_total += $nilaifinal['nilai'];
+                                        $hw_count++;
+                                    }
+                                    if ($nilaifinal['jenisnilai'] == 'ex') {
+                                        $ex_total += $nilaifinal['nilai'];
+                                        $ex_count++;
+                                    }
+                                    if ($nilaifinal['jenisnilai'] == 'ft') $ft_score = $nilaifinal['nilai'];
+                                }
+                            }
+                            $hw_score = $hw_count > 0 ? $hw_total / $hw_count : 0;
+                            $ex_score = $ex_count > 0 ? $ex_total / $ex_count : 0;
+                            $ft_with_bonus = min($ft_score + ($ft_score * 0.07), 100);
+                            $final_score = ($pt_score * 0.10) + ($mt_score * 0.15) +
+                                         ($hw_score * 0.20) + ($ex_score * 0.25) +
+                                         ($ft_with_bonus * 0.30);
                         }
-
-                        $hw_score = $hw_count > 0 ? $hw_total / $hw_count : 0;
-                        $ex_score = $ex_count > 0 ? $ex_total / $ex_count : 0;
-                        $ft_with_bonus = min($ft_score + ($ft_score * 0.07), 100);
-
-                        $final_score = ($pt_score * 0.10) + ($mt_score * 0.15) +
-                                     ($hw_score * 0.20) + ($ex_score * 0.25) +
-                                     ($ft_with_bonus * 0.30);
-
                         $total_score += $final_score;
                     }
                     echo number_format($total_score, 2);
@@ -513,7 +514,7 @@
         </tbody>
     </table>
 
-    <p style=" text-align: center; margin-top: 30px;">Jakarta, June 14<sup>th</sup>, 2025</p>
+    <p style=" text-align: center; margin-top: 30px;">Jakarta, June 18<sup>th</sup>, 2025</p>
 
     <table style="width: 100%; margin-top: 20px; border: none;">
         <tr style="text-align: center;">

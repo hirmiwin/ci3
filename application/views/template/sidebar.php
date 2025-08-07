@@ -116,8 +116,8 @@
           </li>
 
           <!-- Nilai UAS -->
-          <li class="nav-item has-treeview <?php echo ($this->uri->segment(1) == 'nilaifinal' || $this->uri->segment(1) == 'raporfinal' || $this->uri->segment(1) == 'nilaideskripsifinal') ? 'menu-open' : ''; ?>">
-            <a href="#" class="nav-link <?php echo ($this->uri->segment(1) == 'nilaifinal' || $this->uri->segment(1) == 'raporfinal' || $this->uri->segment(1) == 'nilaideskripsifinal') ? 'active' : ''; ?>">
+          <li class="nav-item has-treeview <?php echo ($this->uri->segment(1) == 'nilaifinal' || $this->uri->segment(1) == 'nilaifinalmanual'|| $this->uri->segment(1) == 'raporfinal' || $this->uri->segment(1) == 'nilaideskripsifinal') ? 'menu-open' : ''; ?>">
+            <a href="#" class="nav-link <?php echo ($this->uri->segment(1) == 'nilaifinal' || $this->uri->segment(1) == 'nilaifinalmanual'|| $this->uri->segment(1) == 'raporfinal' || $this->uri->segment(1) == 'nilaideskripsifinal') ? 'active' : ''; ?>">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Nilai Akhir Semester
@@ -130,6 +130,13 @@
                   class="nav-link <?php echo ($this->uri->segment(1) == 'nilaifinal') ? 'active' : ''; ?>">
                   <i class="nav-icon far fa-circle"></i>
                   <p>Input NAS</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo site_url('nilaifinalmanual/input_nilai'); ?>"
+                  class="nav-link <?php echo ($this->uri->segment(1) == 'nilaifinalmanual' && $this->uri->segment(2) == 'input_nilai') ? 'active' : ''; ?>">
+                  <i class="nav-icon far fa-circle"></i>
+                  <p>Input Manual English</p>
                 </a>
               </li>
               <?php if ($this->session->userdata('role') == 'admin' || is_wali_kelas($this->session->userdata('id'))): ?>
