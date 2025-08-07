@@ -12,13 +12,20 @@ class Raporfinal_model extends CI_Model {
     }
 
     public function get_nilai_final($siswa_id) {
+        $tahun_ajaran = $this->session->userdata('tahun_ajaran');
+        $semester = $this->session->userdata('semester');
+
         // Get mid scores (PT and MT)
         $this->db->select('id, siswa_id, pelajaran_id, CAST(nilai_pt AS DECIMAL(5,2)) as nilai_pt, CAST(nilai_mt AS DECIMAL(5,2)) as nilai_mt');
         $this->db->where('siswa_id', $siswa_id);
+        $this->db->where('tahun_ajaran', $tahun_ajaran);
+        $this->db->where('semester', $semester);
         $mid_scores = $this->db->get('nilaimid')->result_array();
         
         // Get final scores (HW, EX, FT)
         $this->db->where('siswa_id', $siswa_id);
+        $this->db->where('tahun_ajaran', $tahun_ajaran);
+        $this->db->where('semester', $semester);
         $final_scores = $this->db->get('nilaifinal')->result_array();
         
         return array(
@@ -35,6 +42,8 @@ class Raporfinal_model extends CI_Model {
         $this->db->select_avg('nilai_pt');
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('pelajaran_id', $pelajaran_id);
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         return $this->db->get('nilaimid')->row_array();
     }
 
@@ -48,14 +57,21 @@ class Raporfinal_model extends CI_Model {
 
     public function get_deskripsi_nilai($siswa_id) {
         $this->db->where('siswa_id', $siswa_id);
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         return $this->db->get('nilaideskripsifinal')->row_array();
     }
 
     public function get_rata_kelas_detail($kelas_id, $pelajaran_id) {
+        $tahun_ajaran = $this->session->userdata('tahun_ajaran');
+        $semester = $this->session->userdata('semester');
+
         // Get class PT and MT averages
         $this->db->select('AVG(CAST(nilai_pt AS DECIMAL(5,2))) as nilai_pt, AVG(CAST(nilai_mt AS DECIMAL(5,2))) as nilai_mt');
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('pelajaran_id', $pelajaran_id);
+        $this->db->where('tahun_ajaran', $tahun_ajaran);
+        $this->db->where('semester', $semester);
         $mid_avg = $this->db->get('nilaimid')->row_array();
 
         // Get class HW average
@@ -65,6 +81,8 @@ class Raporfinal_model extends CI_Model {
         $this->db->where('s.kelas_id', $kelas_id);
         $this->db->where('nf.pelajaran_id', $pelajaran_id);
         $this->db->where('nf.jenisnilai', 'hw');
+        $this->db->where('nf.tahun_ajaran', $tahun_ajaran);
+        $this->db->where('nf.semester', $semester);
         $hw_avg = $this->db->get()->row_array();
 
         // Get class EX average
@@ -74,6 +92,8 @@ class Raporfinal_model extends CI_Model {
         $this->db->where('s.kelas_id', $kelas_id);
         $this->db->where('nf.pelajaran_id', $pelajaran_id);
         $this->db->where('nf.jenisnilai', 'ex');
+        $this->db->where('nf.tahun_ajaran', $tahun_ajaran);
+        $this->db->where('nf.semester', $semester);
         $ex_avg = $this->db->get()->row_array();
 
         // Get class FT average
@@ -86,6 +106,8 @@ class Raporfinal_model extends CI_Model {
         $this->db->where('s.kelas_id', $kelas_id);
         $this->db->where('nf.pelajaran_id', $pelajaran_id);
         $this->db->where('nf.jenisnilai', 'ft');
+        $this->db->where('nf.tahun_ajaran', $tahun_ajaran);
+        $this->db->where('nf.semester', $semester);
         $ft_avg = $this->db->get()->row_array();
 
         // Calculate averages

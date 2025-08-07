@@ -13,6 +13,8 @@ class Rapormid_model extends CI_Model
     public function ambilnilai($siswa_id)
     {
         $this->db->where('siswa_id', $siswa_id);
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         return $this->db->get('nilaimid')->result_array();
     }
 
@@ -22,6 +24,8 @@ class Rapormid_model extends CI_Model
         $this->db->select_avg('nilai_mt');
         $this->db->where('kelas_id', $kelas_id);
         $this->db->where('pelajaran_id', $pelajaran_id);
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         $query = $this->db->get('nilaimid');
         return $query->row_array();
     }
@@ -29,6 +33,8 @@ class Rapormid_model extends CI_Model
     public function ambilDeskripsi($siswa_id)
     {
         $this->db->where('siswa_id', $siswa_id);
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         return $this->db->get('nilaideskripsimid')->row_array();
     }
 
