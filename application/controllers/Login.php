@@ -7,6 +7,7 @@ class Login extends CI_Controller
         parent::__construct();
         // Memuat model User_model
         $this->load->model('User_model');
+        $this->load->model('Tahunajaran_model');
     }
 
     // Halaman login
@@ -17,7 +18,8 @@ class Login extends CI_Controller
             redirect('dashboard');
         }
 
-        $this->load->view('login_view');
+        $data['tahun_ajaran'] = $this->Tahunajaran_model->get_all_tahunajaran();
+        $this->load->view('login_view', $data);
     }
 
     // Proses login
@@ -25,6 +27,8 @@ class Login extends CI_Controller
     {
         $username = $this->input->post('username');
         $password = $this->input->post('password');
+        $tahun_ajaran = $this->input->post('tahun_ajaran');
+        $semester = $this->input->post('semester');
 
         $user = $this->User_model->login($username, $password);
 
@@ -35,7 +39,9 @@ class Login extends CI_Controller
                 'username' => $user->username,
                 'nama' => $user->nama,
                 'role' => $user->role,
-                'logged_in' => true
+                'logged_in' => true,
+                'tahun_ajaran' => $tahun_ajaran,
+                'semester' => $semester
             );
             $this->session->set_userdata($session_data);
             redirect('dashboard'); // Redirect ke halaman dashboard

@@ -40,6 +40,21 @@
             </div>
           </div>
           <div class="input-group mb-3">
+            <select name="tahun_ajaran" class="form-control">
+              <option value="">Pilih Tahun Ajaran</option>
+              <?php foreach ($tahun_ajaran as $ta) : ?>
+                <option value="<?php echo $ta->id; ?>"><?php echo $ta->tahun; ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <select name="semester" class="form-control">
+              <option value="">Pilih Semester</option>
+              <option value="Ganjil">Ganjil</option>
+              <option value="Genap">Genap</option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
             <input type="password" name="password" class="form-control" placeholder="Password">
             <div class="input-group-append">
               <div class="input-group-text">
