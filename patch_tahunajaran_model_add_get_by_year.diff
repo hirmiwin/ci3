@@ -1,13 +1,9 @@
-<?php
-class Tahunajaran_model extends CI_Model
-{
-
-    public function __construct()
+public function get_all_tahunajaran()
     {
-        parent::__construct();
-        $this->load->database();
+        $query = $this->db->get('tahun_ajaran');
+        return $query->result();
     }
-
+=======
     // Fungsi untuk mendapatkan semua tahun ajaran
     public function get_all_tahunajaran()
     {
@@ -18,8 +14,6 @@ class Tahunajaran_model extends CI_Model
     // Fungsi untuk mendapatkan tahun ajaran berdasarkan tahun string
     public function get_by_year($year)
     {
-        $query = $this->db->get_where('tahun_ajaran', ['nama_tahun' => $year]);
+        $query = $this->db->get_where('tahun_ajaran', ['tahun' => $year]);
         return $query->row();
     }
-}
-?>

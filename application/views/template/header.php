@@ -38,6 +38,22 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
+          <a href="#" class="nav-link">
+            <?php
+            // Ambil tahun ajaran aktif langsung dari database
+            $CI =& get_instance();
+            $tahunAjaranAktif = $CI->db->get_where('tahun_ajaran', ['status' => 'aktif'])->row();
+            $tahunAjaranNama = $tahunAjaranAktif ? $tahunAjaranAktif->nama_tahun : '-';
+
+            // Ambil semester aktif dari database
+            $semesterAktif = $CI->db->get_where('semester', ['status' => 'aktif'])->row();
+            $semesterNama = $semesterAktif ? $semesterAktif->nama_semester : '-';
+
+            echo "Tahun Ajaran: <b>{$tahunAjaranNama}</b> &nbsp; Semester: <b>{$semesterNama}</b>";
+            ?>
+          </a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
           <a href="<?php echo site_url(); ?>" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">

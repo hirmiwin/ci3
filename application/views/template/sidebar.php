@@ -43,6 +43,12 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
+                <a href="<?php echo site_url('#'); ?>" class="nav-link <?php echo ($this->uri->segment(1) == '#') ? 'active' : ''; ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tahun Ajaran</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="<?php echo site_url('user'); ?>" class="nav-link <?php echo ($this->uri->segment(1) == 'user') ? 'active' : ''; ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>User</p>
