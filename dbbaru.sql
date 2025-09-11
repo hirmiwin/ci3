@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               8.0.30 - MySQL Community Server - GPL
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.1.0.6537
+-- HeidiSQL Version:             12.11.0.7065
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS `kelas` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_kelas_units` (`unit`),
   CONSTRAINT `FK_kelas_units` FOREIGN KEY (`unit`) REFERENCES `units` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.kelas: ~7 rows (approximately)
+-- Dumping data for table ci4.kelas: ~15 rows (approximately)
 INSERT INTO `kelas` (`id`, `nama_kelas`, `unit`) VALUES
 	(1, '1A', 1),
 	(2, '1B', 1),
@@ -44,7 +44,9 @@ INSERT INTO `kelas` (`id`, `nama_kelas`, `unit`) VALUES
 	(11, '5B', 1),
 	(12, '6A', 1),
 	(13, '6B', 1),
-	(31, '2C', 1);
+	(31, '2C', 1),
+	(33, '8', 2),
+	(34, '9', 2);
 
 -- Dumping structure for table ci4.nilaideskripsifinal
 CREATE TABLE IF NOT EXISTS `nilaideskripsifinal` (
@@ -13207,7 +13209,7 @@ CREATE TABLE IF NOT EXISTS `rombongan_kelas` (
   CONSTRAINT `rombongan_kelas_ibfk_4` FOREIGN KEY (`semester_id`) REFERENCES `semester` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.rombongan_kelas: ~0 rows (approximately)
+-- Dumping data for table ci4.rombongan_kelas: ~13 rows (approximately)
 INSERT INTO `rombongan_kelas` (`id`, `tahun_ajaran_id`, `kelas_id`, `wali_kelas_id`, `semester_id`) VALUES
 	(1, 1, 1, 23, 1),
 	(2, 1, 2, 17, 1),
@@ -13232,11 +13234,13 @@ CREATE TABLE IF NOT EXISTS `semester` (
   PRIMARY KEY (`id`),
   KEY `tahun_ajaran_id` (`tahun_ajaran_id`),
   CONSTRAINT `semester_ibfk_1` FOREIGN KEY (`tahun_ajaran_id`) REFERENCES `tahun_ajaran` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.semester: ~0 rows (approximately)
+-- Dumping data for table ci4.semester: ~2 rows (approximately)
 INSERT INTO `semester` (`id`, `tahun_ajaran_id`, `nama_semester`, `status`) VALUES
-	(1, 1, 'Genap', 'aktif');
+	(1, 1, 'Ganjil', 'nonaktif'),
+	(2, 1, 'Genap', 'nonaktif'),
+	(3, 2, 'Ganjil', 'aktif');
 
 -- Dumping structure for table ci4.siswa
 CREATE TABLE IF NOT EXISTS `siswa` (
@@ -13797,8 +13801,8 @@ CREATE TABLE IF NOT EXISTS `tahun_ajaran` (
 
 -- Dumping data for table ci4.tahun_ajaran: ~2 rows (approximately)
 INSERT INTO `tahun_ajaran` (`id`, `nama_tahun`, `status`) VALUES
-	(1, '2024/2025', 'nonaktif'),
-	(2, '2025/2026', 'aktif');
+	(1, '2024/2025', 'aktif'),
+	(2, '2025/2026', 'nonaktif');
 
 -- Dumping structure for table ci4.units
 CREATE TABLE IF NOT EXISTS `units` (
@@ -13807,7 +13811,7 @@ CREATE TABLE IF NOT EXISTS `units` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.units: ~0 rows (approximately)
+-- Dumping data for table ci4.units: ~2 rows (approximately)
 INSERT INTO `units` (`id`, `nama_unit`) VALUES
 	(1, 'Primary'),
 	(2, 'Secondary');
@@ -13820,9 +13824,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `nama` varchar(50) DEFAULT NULL,
   `role` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.users: ~0 rows (approximately)
+-- Dumping data for table ci4.users: ~54 rows (approximately)
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `role`) VALUES
 	(1, 'mawan', '$2y$10$h1GUsNCdwQ8ScbXlEUt5nuuLUCR8K/JeiZATsh2T0CT6t7Im1Ajvq', 'Hermawan', 'admin'),
 	(2, 'oji', '$2y$10$IvSj417Hle.LE5wj/VE19OUA5mH1VHaI76TRO4dVO77M6UPYw7dlS', 'Fauji Supandi', 'admin'),
@@ -13875,7 +13879,9 @@ INSERT INTO `users` (`id`, `username`, `password`, `nama`, `role`) VALUES
 	(54, 'irfan', '$2y$10$JP8KJF954NP9nKz4O8QcRuIT1XIBEvaivAqGZlLIUFJZEaM1uNURW', 'Irfan', 'admin'),
 	(55, 'rian', '$2y$10$X.4mzwfYgIx.qukthSQ0XuhUUQlZ4F7BFRl.IMtLfJuw4wJlmkXRq', 'Riantod', 'admin'),
 	(56, 'aisy', '$2y$10$mEsmWg3TpDOpFOyR00gszOPd.Fhk4c86b5p.POMM8a.SMH1sd6ts.', 'Aisy Nan Cendikia', 'guru'),
-	(57, 'melyana', '$2y$10$tBM1BRjfAUvMeKCAXEDfkuo0LcDRaCbnBpD020qA9RY8t0gF5NySC', 'Melyana Rahayu, S.Pd', 'guru');
+	(57, 'melyana', '$2y$10$tBM1BRjfAUvMeKCAXEDfkuo0LcDRaCbnBpD020qA9RY8t0gF5NySC', 'Melyana Rahayu, S.Pd', 'guru'),
+	(58, 'balqisanggi', '$2y$10$Su/DroB5wAIv2N32NgZG0uZIjc4c1VIfCG04yTAIyV55lJkoYGxnq', 'Balqis Anggi Saputri S.Si', 'guru'),
+	(59, 'azhraoviyar', '$2y$10$mZnFIUWdkCm8sxwJSaUTQeEv4brpHhPiEPazZqFJ2iriS8kUUi0/.', 'Azhra Oviyar Zachrie', 'guru');
 
 -- Dumping structure for table ci4.wali_kelas
 CREATE TABLE IF NOT EXISTS `wali_kelas` (
@@ -13890,9 +13896,9 @@ CREATE TABLE IF NOT EXISTS `wali_kelas` (
   CONSTRAINT `wali_kelas_ibfk_1` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE,
   CONSTRAINT `wali_kelas_ibfk_2` FOREIGN KEY (`tahun_ajaran_id`) REFERENCES `tahun_ajaran` (`id`) ON DELETE CASCADE,
   CONSTRAINT `wali_kelas_ibfk_3` FOREIGN KEY (`guru_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table ci4.wali_kelas: ~27 rows (approximately)
+-- Dumping data for table ci4.wali_kelas: ~29 rows (approximately)
 INSERT INTO `wali_kelas` (`id`, `kelas_id`, `tahun_ajaran_id`, `guru_id`) VALUES
 	(1, 1, 1, 23),
 	(2, 2, 1, 17),
@@ -13920,7 +13926,9 @@ INSERT INTO `wali_kelas` (`id`, `kelas_id`, `tahun_ajaran_id`, `guru_id`) VALUES
 	(24, 10, 2, 19),
 	(25, 11, 2, 28),
 	(26, 12, 2, 42),
-	(27, 13, 2, 34);
+	(27, 13, 2, 34),
+	(28, 33, 2, 58),
+	(29, 34, 2, 40);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
