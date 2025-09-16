@@ -28,9 +28,13 @@ class Tahunajaran extends CI_Controller
             $this->load->view('tahunajaran_form');
             $this->load->view('template/footer');
         } else {
+            $status = $this->input->post('status');
+            if ($status !== 'aktif') {
+                $status = 'nonaktif';
+            }
             $data = [
                 'nama_tahun' => $this->input->post('nama_tahun'),
-                'status' => $this->input->post('status')
+                'status' => $status
             ];
             $this->Tahunajaran_model->insert($data);
             redirect('tahunajaran');
@@ -51,6 +55,10 @@ class Tahunajaran extends CI_Controller
                 'nama_tahun' => $this->input->post('nama_tahun'),
                 'status' => $this->input->post('status')
             ];
+            if ($update['status'] == 'aktif') {
+                // Nonaktifkan semua tahun ajaran lain
+                $this->db->update('tahun_ajaran', ['status' => 'nonaktif']);
+            }
             $this->Tahunajaran_model->update($id, $update);
             redirect('tahunajaran');
         }

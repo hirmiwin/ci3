@@ -18,8 +18,7 @@ class Tahunajaran_model extends CI_Model
     // Fungsi untuk mendapatkan tahun ajaran berdasarkan tahun string
     public function get_by_year($year)
     {
-        $query = $this->db->get_where('tahun_ajaran', ['nama_tahun' => $year]);
-        return $query->row();
+        return $this->db->get_where('tahun_ajaran', ['nama_tahun' => $year])->row();
     }
 
     public function get_by_id($id)

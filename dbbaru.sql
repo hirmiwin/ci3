@@ -13796,13 +13796,14 @@ CREATE TABLE IF NOT EXISTS `tahun_ajaran` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nama_tahun` varchar(20) DEFAULT NULL,
   `status` enum('aktif','nonaktif') DEFAULT 'nonaktif',
+  `tahun` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table ci4.tahun_ajaran: ~2 rows (approximately)
-INSERT INTO `tahun_ajaran` (`id`, `nama_tahun`, `status`) VALUES
-	(1, '2024/2025', 'aktif'),
-	(2, '2025/2026', 'nonaktif');
+INSERT INTO `tahun_ajaran` (`id`, `nama_tahun`, `status`, `tahun`) VALUES
+	(1, '2024/2025', 'nonaktif', NULL),
+	(2, '2025/2026', 'aktif', NULL);
 
 -- Dumping structure for table ci4.units
 CREATE TABLE IF NOT EXISTS `units` (

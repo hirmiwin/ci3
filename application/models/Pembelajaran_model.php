@@ -10,20 +10,29 @@ class Pembelajaran_model extends CI_Model
         $this->load->database();
     }
 
+    private function get_tahun_ajaran_aktif_id()
+    {
+        $query = $this->db->get_where('tahun_ajaran', ['status' => 'aktif']);
+        $row = $query->row();
+        return $row ? $row->id : null;
+    }
+
     public function get_all()
     {
+        $tahun_ajaran_id = $this->get_tahun_ajaran_aktif_id();
         $this->db->select('a.*, b.nama_pelajaran as nama_pelajaran, c.nama_kelas as nama_kelas, d.nama as nama_user, e.nama_unit as nama_unit');
         $this->db->from('pembelajaran a');
         $this->db->join('pelajaran b', 'b.id = a.pelajaran_id', 'inner');
         $this->db->join('kelas c', 'c.id = a.kelas_id', 'inner');
         $this->db->join('users d', 'd.id = a.user_id', 'inner');
         $this->db->join('units e', 'e.id = a.unit_id', 'inner');
-        // return $this->db->get()->result();
+        $this->db->where('a.tahun_ajaran_id', $tahun_ajaran_id);
         return $this->db->get()->result_array();
     }
 
     public function insert($data)
     {
+        $data['tahun_ajaran_id'] = $this->get_tahun_ajaran_aktif_id();
         // Menyimpan data kelas ke database
         return $this->db->insert('pembelajaran', $data);
     }
@@ -42,6 +51,7 @@ class Pembelajaran_model extends CI_Model
 
     public function update($id, $data)
     {
+        $data['tahun_ajaran_id'] = $this->get_tahun_ajaran_aktif_id();
         // Mengupdate data kelas di database
         $this->db->where('id', $id);
         return $this->db->update('pembelajaran', $data);
