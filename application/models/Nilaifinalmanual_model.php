@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Nilaifinalmanual_model extends CI_Model
+class Nilaifinal_model extends CI_Model
 {
     public function __construct()
     {
@@ -106,51 +106,5 @@ class Nilaifinalmanual_model extends CI_Model
         }
 
         return false;
-    }
-
-    public function get_nilai_manual_by_kelas($kelas_id)
-    {
-        $result = $this->db->select('siswa_id, nilai')
-            ->from('nilaifinalmanual')
-            ->join('siswa', 'siswa.id = nilaifinalmanual.siswa_id')
-            ->where('siswa.kelas_id', $kelas_id)
-            ->get()
-            ->result_array();
-        $nilai = [];
-        foreach ($result as $row) {
-            $nilai[$row['siswa_id']] = $row;
-        }
-        return $nilai;
-    }
-
-    public function save_nilai_manual($kelas_id, $nilai_manual)
-    {
-        if (!$kelas_id || !is_array($nilai_manual)) {
-            return false;
-        }
-
-        // Ambil semua siswa_id di kelas ini
-        $siswa_list = $this->get_siswa_by_kelas($kelas_id);
-        $siswa_ids = array_column($siswa_list, 'id');
-
-        // Hapus data lama
-        if (!empty($siswa_ids)) {
-            $this->db->where_in('siswa_id', $siswa_ids)->delete('nilaifinalmanual');
-        }
-
-        // Insert data baru
-        $insert_data = [];
-        foreach ($nilai_manual as $siswa_id => $nilai) {
-            if ($nilai !== '' && $nilai !== null) {
-                $insert_data[] = [
-                    'siswa_id' => $siswa_id,
-                    'nilai' => $nilai
-                ];
-            }
-        }
-        if (!empty($insert_data)) {
-            $this->db->insert_batch('nilaifinalmanual', $insert_data);
-        }
-        return true;
     }
 }

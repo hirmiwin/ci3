@@ -76,4 +76,11 @@ class User_model extends CI_Model
         $query = $this->db->get('users');
         return $query->result();
     }
+
+    // Fungsi untuk mendapatkan semester aktif
+    public function get_active_semester()
+    {
+        $query = $this->db->get_where('semester', array('status' => 'aktif'));
+        return $query->row();
+    }
 }

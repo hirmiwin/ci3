@@ -24,6 +24,17 @@ class Siswa_model extends CI_Model
         return $this->db->insert('siswa', $data);
     }
 
+    public function insert_siswa($data)
+    {
+        $this->db->insert('siswa', $data);
+        return $this->db->insert_id();
+    }
+
+    public function insert_siswa_kelas($data)
+    {
+        return $this->db->insert('siswa_kelas', $data);
+    }
+
     public function get_by_id($id)
     {
         // Mengambil data siswa berdasarkan id
@@ -83,5 +94,15 @@ class Siswa_model extends CI_Model
         $this->db->where('id', $id);
         $query = $this->db->get('siswa');
         return $query->row_array();
+    }
+
+    public function get_siswa_by_tahun_ajaran($tahun_ajaran_id)
+    {
+        $this->db->select('siswa.*, siswa_kelas.tahun_ajaran_id');
+        $this->db->from('siswa');
+        $this->db->join('siswa_kelas', 'siswa.id = siswa_kelas.siswa_id', 'left');
+        $this->db->where('siswa_kelas.tahun_ajaran_id', $tahun_ajaran_id);
+        $this->db->group_by('siswa.id');
+        return $this->db->get()->result();
     }
 }

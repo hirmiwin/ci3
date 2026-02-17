@@ -52,7 +52,9 @@ class Nilaifinal_model extends CI_Model
         $this->db->select('s.id as siswa_id, s.nama as nama_siswa, nf.*')
             ->from('siswa s')
             ->join('nilaifinal nf', 's.id = nf.siswa_id', 'left')
-            ->where('s.kelas_id', $kelas_id);
+            ->where('s.kelas_id', $kelas_id)
+            ->where('nf.tahun_ajaran', $this->session->userdata('tahun_ajaran'))
+            ->where('nf.semester', $this->session->userdata('semester'));
         return $this->db->get()->result_array();
     }
 
@@ -62,6 +64,8 @@ class Nilaifinal_model extends CI_Model
             ->from('siswa s')
             ->join('nilaifinal nf', 's.id = nf.siswa_id AND nf.jenisnilai = "' . $jenisnilai . '" AND nf.pelajaran_id = ' . $pelajaran_id, 'left')
             ->where('s.kelas_id', $kelas_id)
+            ->where('nf.tahun_ajaran', $this->session->userdata('tahun_ajaran'))
+            ->where('nf.semester', $this->session->userdata('semester'))
             ->group_by('s.id, s.nama')
             ->get()
             ->result_array();
@@ -74,6 +78,8 @@ class Nilaifinal_model extends CI_Model
         $jenisnilai = $this->input->post('jenisnilai');
         $pelajaran_id = $this->input->post('pelajaran_id');
         $nilai_arrays = $this->input->post('nilai');
+        $tahun_ajaran = $this->session->userdata('tahun_ajaran');
+        $semester = $this->session->userdata('semester');
 
         // Validate if we have all required data
         if (!$siswa_ids || !$jenisnilai || !$nilai_arrays || !$pelajaran_id) {
@@ -84,6 +90,8 @@ class Nilaifinal_model extends CI_Model
         $this->db->where('jenisnilai', $jenisnilai)
             ->where('pelajaran_id', $pelajaran_id)
             ->where_in('siswa_id', $siswa_ids)
+            ->where('tahun_ajaran', $tahun_ajaran)
+            ->where('semester', $semester)
             ->delete('nilaifinal');
 
         // Then insert new values
@@ -95,7 +103,9 @@ class Nilaifinal_model extends CI_Model
                     'siswa_id' => $siswa_id,
                     'jenisnilai' => $jenisnilai,
                     'pelajaran_id' => $pelajaran_id,
-                    'nilai' => $nilai
+                    'nilai' => $nilai,
+                    'tahun_ajaran' => $tahun_ajaran,
+                    'semester' => $semester
                 ];
             }
         }

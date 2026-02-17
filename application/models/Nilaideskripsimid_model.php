@@ -11,21 +11,29 @@ class Nilaideskripsimid_model extends CI_Model
         $this->db->from($this->table);
         $this->db->join('siswa', 'siswa.id = nilaideskripsimid.siswa_id');
         $this->db->join('kelas', 'kelas.id = siswa.kelas_id');
+        $this->db->where('nilaideskripsimid.tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('nilaideskripsimid.semester', $this->session->userdata('semester'));
         return $this->db->get()->result_array();
     }
 
     public function getById($id)
     {
+        $this->db->where('tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('semester', $this->session->userdata('semester'));
         return $this->db->get_where($this->table, ['id' => $id])->row();
     }
 
     public function save($data)
     {
+        $data['tahun_ajaran'] = $this->session->userdata('tahun_ajaran');
+        $data['semester'] = $this->session->userdata('semester');
         return $this->db->insert($this->table, $data);
     }
 
     public function update($data, $id)
     {
+        $data['tahun_ajaran'] = $this->session->userdata('tahun_ajaran');
+        $data['semester'] = $this->session->userdata('semester');
         return $this->db->update($this->table, $data, ['id' => $id]);
     }
 
@@ -55,17 +63,21 @@ class Nilaideskripsimid_model extends CI_Model
         if ($siswa_id !== null) {
             $this->db->where('siswa.id', $siswa_id);
         }
+        $this->db->where('nilaideskripsimid.tahun_ajaran', $this->session->userdata('tahun_ajaran'));
+        $this->db->where('nilaideskripsimid.semester', $this->session->userdata('semester'));
         return $this->db->get()->result_array();
     }
 
     public function save_or_update($data)
     {
+        $data['tahun_ajaran'] = $this->session->userdata('tahun_ajaran');
+        $data['semester'] = $this->session->userdata('semester');
         // Check if record exists
-        $existing = $this->db->get_where($this->table, ['siswa_id' => $data['siswa_id']])->row();
+        $existing = $this->db->get_where($this->table, ['siswa_id' => $data['siswa_id'], 'tahun_ajaran' => $data['tahun_ajaran'], 'semester' => $data['semester']])->row();
 
         if ($existing) {
             // Update existing record
-            return $this->db->update($this->table, $data, ['siswa_id' => $data['siswa_id']]);
+            return $this->db->update($this->table, $data, ['siswa_id' => $data['siswa_id'], 'tahun_ajaran' => $data['tahun_ajaran'], 'semester' => $data['semester']]);
         } else {
             // Insert new record
             return $this->db->insert($this->table, $data);

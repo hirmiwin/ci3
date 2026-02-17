@@ -7,6 +7,7 @@ class Login extends CI_Controller
         parent::__construct();
         // Memuat model User_model
         $this->load->model('User_model');
+        $this->load->model('Tahunajaran_model');
     }
 
     // Halaman login
@@ -17,7 +18,8 @@ class Login extends CI_Controller
             redirect('dashboard');
         }
 
-        $this->load->view('login_view');
+        $data['tahun_ajaran'] = $this->Tahunajaran_model->get_all_tahunajaran();
+        $this->load->view('login_view', $data);
     }
 
     // Proses login
@@ -25,17 +27,26 @@ class Login extends CI_Controller
     {
         $username = $this->input->post('username');
         $password = $this->input->post('password');
+        $tahun_ajaran = $this->input->post('tahun_ajaran');
+        $semester = $this->input->post('semester');
 
         $user = $this->User_model->login($username, $password);
 
         if ($user) {
+            // Ambil tahun ajaran id berdasarkan tahun ajaran string
+            $tahun_ajaran_record = $this->Tahunajaran_model->get_by_year($tahun_ajaran);
+            $tahun_ajaran_id = $tahun_ajaran_record ? $tahun_ajaran_record->id : null;
+
             // Set session data jika login berhasil
             $session_data = array(
                 'id' => $user->id,
                 'username' => $user->username,
                 'nama' => $user->nama,
                 'role' => $user->role,
-                'logged_in' => true
+                'logged_in' => true,
+                'tahun_ajaran' => $tahun_ajaran,
+                'tahun_ajaran_id' => $tahun_ajaran_id,
+                'semester' => $semester
             );
             $this->session->set_userdata($session_data);
             redirect('dashboard'); // Redirect ke halaman dashboard

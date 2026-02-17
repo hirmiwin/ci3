@@ -1,0 +1,19 @@
+public function get_all_tahunajaran()
+    {
+        $query = $this->db->get('tahun_ajaran');
+        return $query->result();
+    }
+=======
+    // Fungsi untuk mendapatkan semua tahun ajaran
+    public function get_all_tahunajaran()
+    {
+        $query = $this->db->get('tahun_ajaran');
+        return $query->result();
+    }
+
+    // Fungsi untuk mendapatkan tahun ajaran berdasarkan tahun string
+    public function get_by_year($year)
+    {
+        $query = $this->db->get_where('tahun_ajaran', ['tahun' => $year]);
+        return $query->row();
+    }

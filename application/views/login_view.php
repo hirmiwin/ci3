@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Log in (v2)</title>
+  <title>Rapor AIS - Login</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -21,26 +21,26 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="../../index2.html" class="h1"><b>Rapor | </b>AIS</a>
+        <a href="#" class="h1"><b>Rapor | </b>AIS</a>
       </div>
       <div class="card-body text-center">
         <p class="login-box-msg">Sign in to start your session</p>
         <?php
         if ($this->session->flashdata('error')) {
-          echo '<p style="color: red;">' . $this->session->flashdata('error') . '</p>';
+          echo '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' . $this->session->flashdata('error') . '</div>';
         }
         ?>
         <form action="<?php echo site_url('login/authenticate'); ?>" method="post">
           <div class="input-group mb-3">
-            <input type="username" name="username" class="form-control" placeholder="Username">
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
             <div class="input-group-append">
               <div class="input-group-text">
-                <span class="fas fa-envelope"></span>
+                <span class="fas fa-user"></span>
               </div>
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" name="password" class="form-control" placeholder="Password">
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -49,12 +49,6 @@
           </div>
           <div class="row">
             <div class="col-8">
-              <!-- <div class="icheck-primary">
-              <input type="checkbox" id="remember">
-              <label for="remember">
-                Remember Me
-              </label>
-            </div> -->
             </div>
             <!-- /.col -->
             <div class="col-4">
@@ -73,11 +67,11 @@
   <!-- /.login-box -->
 
   <!-- jQuery -->
-  <script src="../../plugins/jquery/jquery.min.js"></script>
+  <script src="<?php echo base_url() ?>aset/plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
-  <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="<?php echo base_url() ?>aset/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
-  <script src="../../dist/js/adminlte.min.js"></script>
+  <script src="<?php echo base_url() ?>aset/dist/js/adminlte.min.js"></script>
 </body>
 
 </html>

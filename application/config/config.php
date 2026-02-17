@@ -24,8 +24,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
 */
 // $config['base_url'] = 'http://192.168.1.56/ci3/';
-$config['base_url'] = 'http://192.168.1.200/raporsd/';
+// $config['base_url'] = 'http://192.168.1.200/raporsd/';
 // $config['base_url'] = 'http://localhost/ci3/';
+$config['base_url'] = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+$config['base_url'] .= "://" . $_SERVER['HTTP_HOST'];
+$config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 
 /*
 |--------------------------------------------------------------------------
